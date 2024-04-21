@@ -1,30 +1,29 @@
-# Calculate the twist rate of a curve in the Frenet-Serret frame
 import numpy as np
 import matplotlib.pyplot as plt
 from mayavi import mlab
+from scipy.signal import savgol_filter
 
 # Import coordinates of points on the center line
 for i in range(1, 61):
     r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv',
                       delimiter=',', skip_header=1)
 
-    d3 = np.zeros((99, 3))      # Tangent vector
-    d1 = np.zeros((98, 3))      # Normal vector
-    K = np.zeros(98)            # Curvature
-    d2 = np.zeros((98, 3))      # Binormal vector
-    tau = np.zeros(97)          # Twist rate, Torsion
+    # Smooth positions by using the Savitzky-Golay filter
+    w = 10
+    p = 2
+    r_smooth = savgol_filter(r, w, polyorder=p, axis=0, mode='nearest')
+    r_smooth_der1 = savgol_filter(r, w, polyorder=p, axis=0, mode='nearest', deriv=1)
+    norms_der1 = np.linalg.norm(r_smooth_der1, axis=1, keepdims=True)
 
+    # Define the Frenet-Serret frame
+    d3 = r_smooth_der1 / norms_der1     # Tangent vectors
+    d1 = savgol_filter(d3, w, polyorder=p, axis=0, mode='nearest', deriv=1)
+    d1 = d1 / np.linalg.norm(d1, axis=1, keepdims=True)
+    d2 = np.cross(d3, d1, axis=1)
+
+    # Calculate torsion
+    tau = np.zeros(99)
     for n in range(99):
-        d3[n] = (r[n + 1] - r[n])
-        d3[n] = d3[n] / np.linalg.norm(d3[n])
-
-    for n in range(98):
-        d1[n] = d3[n + 1] - d3[n]
-        K[n] = np.linalg.norm(d1[n])
-        d1[n] = d1[n] / K[n]
-        d2[n] = np.cross(d3[n], d1[n])
-
-    for n in range(97):
         tau[n] = (-1) * np.inner(d1[n], d2[n + 1] - d2[n])
 
     # Define angles (elevation, azimuth)
@@ -44,7 +43,7 @@ for i in range(1, 61):
 
     for j, angle in enumerate(angles, start=1):
         ax = fig.add_subplot(2, 2, j, projection='3d')
-        sc = ax.scatter(r[1:98, 0], r[1:98, 1], r[1:98, 2], c=tau, cmap='plasma')
+        sc = ax.scatter(r[1:100, 0], r[1:100, 1], r[1:100, 2], c=tau, cmap='plasma')
         ax.view_init(elev=angle[0], azim=angle[1])
 
         # Setting the same scale for all axes
@@ -61,15 +60,6 @@ for i in range(1, 61):
     cbar.set_label('Twist Rate', fontsize=15, rotation=270, labelpad=15)
 
     #plt.tight_layout()
-    fig.suptitle(f'Frenet-Serret, Time {i}', fontsize=20, fontweight='bold')
-    plt.savefig(f'centerline_fs_{i}.png', bbox_inches='tight')
+    fig.suptitle(f'Frenet-Serret, Savitzky-Golay, Time {i}', fontsize=20, fontweight='bold')
+    plt.savefig(f'centerline_fs_savgol_{i}.png', bbox_inches='tight')
     plt.close(fig)
-
-    # # Plot Twist Rate
-    # fig, ax = plt.subplots(figsize=(10, 8))
-    # ax.plot(tau)
-    # ax.set_xlabel('s')
-    # ax.set_ylabel(r'$\tau(s)$')
-    # ax.set_title(f'Twist Rate in the Frenet-Serret Frame, Time {i}')
-    # plt.savefig(f'twist_rate_fs_{i}.png', bbox_inches='tight')
-    # plt.close(fig)
