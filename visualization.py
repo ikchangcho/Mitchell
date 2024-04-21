@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.signal import savgol_filter
 import matplotlib.pyplot as plt
-from mayavi import mlab
+#from mayavi import mlab
 
 def frenet_serret_frame(r):
     L = len(r)
@@ -134,6 +134,7 @@ d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
 
 #fig = fourplots(r, tau, [(30, 30), (30, 120), (60, 30), (60, 120)])
 fig = plot(r, tau, [30, 30])
+#fig.suptitle(f'Frenet-Serret, Time {i}', fontsize=20, fontweight='bold')
 fig.suptitle(f'Frenet-Serret, Savitzky-Golay, Time {i}', fontsize=20, fontweight='bold')
 #plt.savefig(f'centerline_fs_savgol_{i}.png', bbox_inches='tight')
 plt.show()
