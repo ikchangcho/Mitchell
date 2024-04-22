@@ -57,6 +57,34 @@ def frenet_serret_frame_savitzky_golay(r, w, p):
 # Savitzky-Golay filter
 
 
+def ribbon_frame(r1, r2):
+    L = len(r)
+    d3 = np.zeros((L-1, 3))     # Tangent vector
+    d1 = np.zeros((L-2, 3))     # Normal vector
+    K = np.zeros(L-2)           # Curvature
+    d2 = np.zeros((L-2, 3))     # Binormal vector
+    tau = np.zeros(L-3)         # Torsion
+
+    # Calculate tangent vectors
+    for n in range(L-1):
+        d3[n] = r[n+1] - r[n]
+        d3[n] = d3[n] / np.linalg.norm(d3[n])
+
+    # Calculate normal vectors and curvature
+    for n in range(L-2):
+        d1[n] = d3[n+1] - d3[n]
+        K[n] = np.linalg.norm(d1[n])
+        if K[n] != 0:  # Avoid division by zero
+            d1[n] = d1[n] / K[n]
+        d2[n] = np.cross(d3[n], d1[n])
+
+    # Calculate torsion
+    for n in range(L-3):
+        tau[n] = (-1) * np.inner(d1[n], d2[n + 1] - d2[n])
+
+    return d1, d2, d3, K, tau
+# Position arrays (r1, r2) => Ribbon frames (d1, d2, d3), Curvature (K), Torsion (tau)
+
 def plot(r, tau, angle):
     L = len(tau)
     max_range = np.array([r[1:L + 1, 0].max() - r[1:L + 1, 0].min(),
@@ -126,16 +154,16 @@ def fourplots(r, tau, angles):
 
 
 # Import coordinates of points on the center line
-i = 60
-r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
+for i in range(1, 61):
+    r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
 
-#d1, d2, d3, K, tau = frenet_serret_frame(r)
-d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
+    #d1, d2, d3, K, tau = frenet_serret_frame(r)
+    d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
 
-#fig = fourplots(r, tau, [(30, 30), (30, 120), (60, 30), (60, 120)])
-fig = plot(r, tau, [30, 30])
-#fig.suptitle(f'Frenet-Serret, Time {i}', fontsize=20, fontweight='bold')
-fig.suptitle(f'Frenet-Serret, Savitzky-Golay, Time {i}', fontsize=20, fontweight='bold')
-#plt.savefig(f'centerline_fs_savgol_{i}.png', bbox_inches='tight')
-plt.show()
-plt.close(fig)
+    fig = fourplots(r, tau, [(30, -30), (90, -90), (0, -90), (0, 180)])
+    #fig = plot(r, tau, [90, -90])
+    #fig.suptitle(f'Frenet-Serret, Time {i}', fontsize=20, fontweight='bold')
+    fig.suptitle(f'Frenet-Serret, Savitzky-Golay, Time {i}', fontsize=20, fontweight='bold')
+    plt.savefig(f'centerline_fs_savgol_{i}.png')
+    #plt.show()
+    plt.close(fig)
