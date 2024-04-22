@@ -124,7 +124,7 @@ def plot(r, tau, angle, cmap):
 
 def fourplots(r, tau, angles, cmap):
     L = len(tau)
-    max_range = 120
+    max_range = 140
     mid_x = (250 + -50) / 2.0
     mid_y = (100 + -100) / 2.0
     mid_z = (100 + -100) / 2.0
