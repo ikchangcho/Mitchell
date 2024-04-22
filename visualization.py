@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.signal import savgol_filter
 import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
+import seaborn as sns
 #from mayavi import mlab
 
 def frenet_serret_frame(r):
@@ -38,7 +40,6 @@ def frenet_serret_frame_savitzky_golay(r, w, p):
     tau = np.zeros(L-1)
 
     # Smooth positions by using the Savitzky-Golay filter
-    r_smooth = savgol_filter(r, w, polyorder=p, axis=0, mode='nearest')
     r_smooth_der1 = savgol_filter(r, w, polyorder=p, axis=0, mode='nearest', deriv=1)
     norms_der1 = np.linalg.norm(r_smooth_der1, axis=1, keepdims=True)
 
@@ -85,20 +86,24 @@ def ribbon_frame(r1, r2):
     return d1, d2, d3, K, tau
 # Position arrays (r1, r2) => Ribbon frames (d1, d2, d3), Curvature (K), Torsion (tau)
 
-def plot(r, tau, angle):
+def plot(r, tau, angle, cmap):
     L = len(tau)
-    max_range = np.array([r[1:L + 1, 0].max() - r[1:L + 1, 0].min(),
-                          r[1:L + 1, 1].max() - r[1:L + 1, 1].min(),
-                          r[1:L + 1, 2].max() - r[1:L + 1, 2].min()]).max() / 2.0
-
-    mid_x = (r[1:L + 1, 0].max() + r[1:L + 1, 0].min()) / 2.0
-    mid_y = (r[1:L + 1, 1].max() + r[1:L + 1, 1].min()) / 2.0
-    mid_z = (r[1:L + 1, 2].max() + r[1:L + 1, 2].min()) / 2.0
+    max_range = 140
+    mid_x = (250 + -50) / 2.0
+    mid_y = (100 + -100) / 2.0
+    mid_z = (100 + -100) / 2.0
+    # max_range = np.array([r[1:L+1, 0].max() - r[1:L+1, 0].min(),
+    #                       r[1:L+1, 1].max() - r[1:L+1, 1].min(),
+    #                       r[1:L+1, 2].max() - r[1:L+1, 2].min()]).max() / 2.0
+    #
+    # mid_x = (r[1:L+1, 0].max() + r[1:L+1, 0].min()) / 2.0
+    # mid_y = (r[1:L+1, 1].max() + r[1:L+1, 1].min()) / 2.0
+    # mid_z = (r[1:L+1, 2].max() + r[1:L+1, 2].min()) / 2.0
 
     fig = plt.figure(figsize=(20, 15))
 
     ax = fig.add_subplot(1, 1, 1, projection='3d')
-    sc = ax.scatter(r[1:L + 1, 0], r[1:L + 1, 1], r[1:L + 1, 2], c=tau, cmap='plasma')
+    sc = ax.scatter(r[1:L + 1, 0], r[1:L + 1, 1], r[1:L + 1, 2], c=tau, cmap=cmap, norm=Normalize(vmin=-1, vmax=1))
     ax.view_init(elev=angle[0], azim=angle[1])
 
     # Setting the same scale for all axes
@@ -117,21 +122,25 @@ def plot(r, tau, angle):
 # Create a 3D trajectory
 
 
-def fourplots(r, tau, angles):
+def fourplots(r, tau, angles, cmap):
     L = len(tau)
-    max_range = np.array([r[1:L+1, 0].max() - r[1:L+1, 0].min(),
-                          r[1:L+1, 1].max() - r[1:L+1, 1].min(),
-                          r[1:L+1, 2].max() - r[1:L+1, 2].min()]).max() / 2.0
-
-    mid_x = (r[1:L+1, 0].max() + r[1:L+1, 0].min()) / 2.0
-    mid_y = (r[1:L+1, 1].max() + r[1:L+1, 1].min()) / 2.0
-    mid_z = (r[1:L+1, 2].max() + r[1:L+1, 2].min()) / 2.0
+    max_range = 120
+    mid_x = (250 + -50) / 2.0
+    mid_y = (100 + -100) / 2.0
+    mid_z = (100 + -100) / 2.0
+    # max_range = np.array([r[1:L+1, 0].max() - r[1:L+1, 0].min(),
+    #                       r[1:L+1, 1].max() - r[1:L+1, 1].min(),
+    #                       r[1:L+1, 2].max() - r[1:L+1, 2].min()]).max() / 2.0
+    #
+    # mid_x = (r[1:L+1, 0].max() + r[1:L+1, 0].min()) / 2.0
+    # mid_y = (r[1:L+1, 1].max() + r[1:L+1, 1].min()) / 2.0
+    # mid_z = (r[1:L+1, 2].max() + r[1:L+1, 2].min()) / 2.0
 
     fig = plt.figure(figsize=(20, 15))
 
     for j, angle in enumerate(angles, start=1):
         ax = fig.add_subplot(2, 2, j, projection='3d')
-        sc = ax.scatter(r[1:L+1, 0], r[1:L+1, 1], r[1:L+1, 2], c=tau, cmap='plasma')
+        sc = ax.scatter(r[1:L + 1, 0], r[1:L + 1, 1], r[1:L + 1, 2], c=tau, cmap=cmap, norm=Normalize(vmin=-1, vmax=1))
         ax.view_init(elev=angle[0], azim=angle[1])
 
         # Setting the same scale for all axes
@@ -152,18 +161,20 @@ def fourplots(r, tau, angles):
 # Create four subplots of the trajectory from different angles
 
 
+# Customized color maps
+cmap1 = sns.diverging_palette(250, 55, l=85, center="dark", as_cmap=True)       # Blue(-) Yellow(+)
 
-# Import coordinates of points on the center line
-for i in range(1, 61):
+# Import data and make plots
+for i in range(1, 61, 10):
     r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
 
     #d1, d2, d3, K, tau = frenet_serret_frame(r)
     d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
 
-    fig = fourplots(r, tau, [(30, -30), (90, -90), (0, -90), (0, 180)])
-    #fig = plot(r, tau, [90, -90])
+    #fig = fourplots(r, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], 'tab10')
+    fig = plot(r, tau, [90, 0], cmap1)
     #fig.suptitle(f'Frenet-Serret, Time {i}', fontsize=20, fontweight='bold')
     fig.suptitle(f'Frenet-Serret, Savitzky-Golay, Time {i}', fontsize=20, fontweight='bold')
-    plt.savefig(f'centerline_fs_savgol_{i}.png')
-    #plt.show()
+    #plt.savefig(f'centerline_fs_savgol_{i}.png')
+    plt.show()
     plt.close(fig)

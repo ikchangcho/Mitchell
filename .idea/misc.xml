@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Black">
-    <option name="sdkName" value="Python 3.9 (Mitchell)" />
+    <option name="executionMode" value="BINARY" />
+    <option name="pathToExecutable" value="$USER_HOME$/anaconda3/bin/black" />
+    <option name="sdkUUID" value="1b4cf372-7e0c-4e65-bb51-97d142170e08" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (Mitchell)" project-jdk-type="Python SDK" />
 </project>
