@@ -162,10 +162,10 @@ def fourplots(r, tau, angles, cmap):
 
 
 # Customized color maps
-cmap1 = sns.diverging_palette(250, 55, l=85, center="dark", as_cmap=True)       # Blue(-) Yellow(+)
+cmap1 = sns.diverging_palette(250, 55, l=85, s=100, center="dark", as_cmap=True)       # Blue(-) Yellow(+)
 
 # Import data and make plots
-for i in range(1, 61, 10):
+for i in range(9, 10):
     r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
 
     #d1, d2, d3, K, tau = frenet_serret_frame(r)
@@ -173,6 +173,7 @@ for i in range(1, 61, 10):
 
     #fig = fourplots(r, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], 'tab10')
     fig = plot(r, tau, [90, 0], cmap1)
+
     #fig.suptitle(f'Frenet-Serret, Time {i}', fontsize=20, fontweight='bold')
     fig.suptitle(f'Frenet-Serret, Savitzky-Golay, Time {i}', fontsize=20, fontweight='bold')
     #plt.savefig(f'centerline_fs_savgol_{i}.png')
