@@ -31,6 +31,33 @@ def frenet_serret_frame(r):
         tau[n] = (-1) * np.inner(d1[n], d2[n + 1] - d2[n])
 
     return d1, d2, d3, K, tau
+# L x 3 Position arrays => Frenet-Serret frames (d1, d2, d3), Curvature (K), Torsion (tau)
+
+
+def frenet_serret_frame2(r):
+    L = len(r)
+    d3 = np.zeros((L-1, 3))     # Tangent vector
+    d1 = np.zeros((L-2, 3))     # Normal vector
+    K = np.zeros(L-2)           # Curvature
+    d2 = np.zeros((L-2, 3))     # Binormal vector
+    tau = np.zeros(L-3)         # Torsion
+
+    # Calculate tangent vectors
+    for n in range(L-1):
+        d3[n] = r[n+1] - r[n]
+        d3[n] = d3[n] / np.linalg.norm(d3[n])
+
+    # Calculate normal vectors and curvature
+    for n in range(L-2):
+        d2[n] = np.cross(d3[n], d3[n+1])
+        d1[n] = np.cross(d2[n], d3[n])
+        K[n] = np.linalg.norm(d3[n+1]-d3[n])
+
+    # Calculate torsion
+    for n in range(L-3):
+        tau[n] = (-1) * np.inner(d1[n], d2[n + 1] - d2[n])
+
+    return d1, d2, d3, K, tau
 # Position arrays (r) => Frenet-Serret frames (d1, d2, d3), Curvature (K), Torsion (tau)
 
 
@@ -86,6 +113,7 @@ def ribbon_frame(r1, r2):
     return d1, d2, d3, K, tau
 # Position arrays (r1, r2) => Ribbon frames (d1, d2, d3), Curvature (K), Torsion (tau)
 
+
 def plot(r, tau, angle, cmap):
     L = len(tau)
     max_range = 140
@@ -103,7 +131,7 @@ def plot(r, tau, angle, cmap):
     fig = plt.figure(figsize=(20, 15))
 
     ax = fig.add_subplot(1, 1, 1, projection='3d')
-    sc = ax.scatter(r[1:L + 1, 0], r[1:L + 1, 1], r[1:L + 1, 2], c=tau, cmap=cmap, norm=Normalize(vmin=-1, vmax=1))
+    sc = ax.scatter(r[1:L + 1, 0], r[1:L + 1, 1], r[1:L + 1, 2], c=tau, cmap=cmap)
     ax.view_init(elev=angle[0], azim=angle[1])
 
     # Setting the same scale for all axes
@@ -165,11 +193,11 @@ def fourplots(r, tau, angles, cmap):
 cmap1 = sns.diverging_palette(250, 55, l=85, s=100, center="dark", as_cmap=True)       # Blue(-) Yellow(+)
 
 # Import data and make plots
-for i in range(9, 10):
+for i in range(60, 61):
     r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
 
-    #d1, d2, d3, K, tau = frenet_serret_frame(r)
-    d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
+    d1, d2, d3, K, tau = frenet_serret_frame2(r)
+    #d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
 
     #fig = fourplots(r, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], 'tab10')
     fig = plot(r, tau, [90, 0], cmap1)
