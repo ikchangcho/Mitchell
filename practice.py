@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 
-test code
+test
 
 # Create sample data
 c1 = np.random.randn(10, 10) * 0.5  # Smaller range of values
