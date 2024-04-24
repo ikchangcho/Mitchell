@@ -129,8 +129,8 @@ for i in range(1, 61):
     fig = fourplots_norm(r, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmap1, -0.4, 0.4)
     #fig = plot(r, tau, [30, -30], cmap1)
 
-    fig.suptitle(f'Frenet-Serret, Time {i}', fontsize=20, fontweight='bold')
+    fig.suptitle(f'Frenet-Serret, Time {i:02}', fontsize=20, fontweight='bold')
     #fig.suptitle(f'Frenet-Serret, Savitzky-Golay, Time {i}', fontsize=20, fontweight='bold')
-    plt.savefig(f'centerline_fs_{i}.png')
+    plt.savefig(f'centerline_fs_{i:02}.png')
     #plt.show()
     plt.close(fig)
