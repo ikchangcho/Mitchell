@@ -92,29 +92,31 @@ def frenet_serret_frame2(r):
 # Position arrays (r) => Frenet-Serret frames (d1, d2, d3), Curvature (K), Torsion (tau)
 # Curvature is not reliable
 
-def ribbon_frame(r1, r2):
-    L = len(r)
+def ribbon_frame(center, edge):
+    L = len(center)
     d3 = np.zeros((L-1, 3))     # Tangent vector
-    d1 = np.zeros((L-2, 3))     # Normal vector
-    K = np.zeros(L-2)           # Curvature
-    d2 = np.zeros((L-2, 3))     # Binormal vector
-    tau = np.zeros(L-3)         # Torsion
+    d1 = np.zeros((L-1, 3))     # Normal vector
+    K = np.zeros(L-1)           # Curvature
+    d2 = np.zeros((L-1, 3))     # Binormal vector
+    tau = np.zeros(L-2)         # Torsion
 
     # Calculate tangent vectors
-    for n in range(L-1):
-        d3[n] = r[n+1] - r[n]
+    for n in range(len(d3)):
+        d3[n] = center[n+1] - center[n]
         d3[n] = d3[n] / np.linalg.norm(d3[n])
 
     # Calculate normal vectors and curvature
-    for n in range(L-2):
-        d1[n] = d3[n+1] - d3[n]
-        K[n] = np.linalg.norm(d1[n])
-        if K[n] != 0:  # Avoid division by zero
-            d1[n] = d1[n] / K[n]
+    for n in range(len(d1)):
+        d1[n] = (edge[n] - center[n]) - np.inner(edge[n] - center[n], d3[n]) * d3[n]
+        if np.linalg.norm(d1[n]) == 0:
+            d1[n] = d1[n-1]
+        else:
+            d1[n] = d1[n] / np.linalg.norm(d1[n])
+
         d2[n] = np.cross(d3[n], d1[n])
 
     # Calculate torsion
-    for n in range(L-3):
+    for n in range(len(tau)):
         tau[n] = (-1) * np.inner(d1[n], d2[n + 1] - d2[n])
 
     return d1, d2, d3, K, tau
