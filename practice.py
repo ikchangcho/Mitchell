@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 
+test code
+
 # Create sample data
 c1 = np.random.randn(10, 10) * 0.5  # Smaller range of values
 c2 = np.random.randn(10, 10) * 1.5  # Larger range of values
