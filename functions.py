@@ -2,8 +2,6 @@ import numpy as np
 from scipy.signal import savgol_filter
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
-import seaborn as sns
-#from mayavi import mlab
 
 # To-Do
 # frenet_serret_frame(), frenet_serret_frame_savitzky_golay(): Curvature

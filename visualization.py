@@ -1,7 +1,11 @@
 from functions import *
+import colormaps as cmaps
+import seaborn as sns
 
 # T0-Do
 # Automatically adjust color bar range according to tau values
+# Color bar
+# Mesh trisurf
 
 
 def plot(r, tau, angle, cmap):
@@ -79,26 +83,26 @@ def fourplots_norm(r, tau, angles, cmap, vmin, vmax):
 
 
 # Customized color maps
-cmap1 = sns.diverging_palette(250, 55, l=85, s=100, center="dark", as_cmap=True)       # Blue(-) Yellow(+)
+cmap1 = sns.diverging_palette(260, 100, l=85, s=100, center="dark", as_cmap=True)
 
 j = 1   # Curve number
-for i in range(1, 61):
+for i in range(60, 61):
     # Import file
     rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
     r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240410 Curves, Meshes/curv{j}_time{i}.csv', delimiter=',', skip_header=1)
 
     # Define frames
-    d1, d2, d3, K, tau = ribbon_frame(rc, r)
+    #d1, d2, d3, K, tau = ribbon_frame(rc, r)
     d10, d20, d30, K0, tau0 = frenet_serret_frame2(rc)
     #d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
-    tau_diff = tau[len(tau0)] - tau0
 
     # Plot
-    fig = fourplots_norm(rc, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmap1, -0.6, 0.6)
-    #fig = plot(rc[:len(tau_diff)+1], tau_diff, [30, -30], cmap1)
+    #fig = fourplots_norm(rc, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmap1, -0.6, 0.6)
+    fig = plot(rc, tau0, [30, -30], cmaps.roma)
     fig.suptitle(f'Ribbon Frame {j}, Time {i:02}', fontsize=20, fontweight='bold')
 
     # Save of show
-    plt.savefig(f'centerline_ribbon{j}_{i:02}.png')
+    #plt.savefig(f'centerline_ribbon{j}_{i:02}.png')
+    plt.savefig('roma.png')
     #plt.show()
     plt.close(fig)
