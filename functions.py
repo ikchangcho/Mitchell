@@ -78,7 +78,9 @@ def frenet_serret_frame2(r):
     # Calculate normal vectors
     for n in range(L-2):
         d2[n] = np.cross(d3[n], d3[n+1])
-        if np.linalg.norm(d2[n]) != 0:
+        if np.linalg.norm(d2[n]) == 0:
+            d2[n] = d2[n-1]
+        else:
             d2[n] = d2[n] / np.linalg.norm(d2[n])
         d1[n] = np.cross(d2[n], d3[n])
 

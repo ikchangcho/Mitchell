@@ -6,6 +6,7 @@ import seaborn as sns
 # Automatically adjust color bar range according to tau values
 # Color bar
 # Mesh trisurf
+# Connect dot?
 
 
 def plot(r, tau, angle, cmap):
@@ -97,8 +98,8 @@ for i in range(60, 61):
     #d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
 
     # Plot
-    #fig = fourplots_norm(rc, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmap1, -0.6, 0.6)
-    fig = plot(rc, tau0, [30, -30], cmaps.roma)
+    #fig = fourplots_norm(rc, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmap.berlin, -0.6, 0.6)
+    fig = plot(rc, tau0, [30, -30], cmaps.berlin)
     fig.suptitle(f'Ribbon Frame {j}, Time {i:02}', fontsize=20, fontweight='bold')
 
     # Save of show
