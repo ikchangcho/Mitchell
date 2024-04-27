@@ -55,7 +55,7 @@ tauderv = tau2 - tau1
 # Plot Twist Rate
 i = 0
 fig, ax = plt.subplots(figsize=(10, 8))
-ax.plot(tauderv[i])
+ax.trajectory(tauderv[i])
 ax.set_xlabel('s')
 ax.set_ylabel(r'$\tau(s)$')
 ax.set_title(f'Derivative of Twist Rate in the Frenet-Serret Frame, Time {i+1}')

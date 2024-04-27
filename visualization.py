@@ -9,7 +9,7 @@ import seaborn as sns
 # Connect dot?
 
 
-def plot(r, tau, angle, cmap):
+def trajectory(r, tau, angle, cmap):
     L = len(tau)
     max_range = 140
     mid_x = (250 + -50) / 2.0
@@ -44,7 +44,7 @@ def plot(r, tau, angle, cmap):
 # => Figure
 # Create a 3D trajectory
 
-def fourplots_norm(r, tau, angles, cmap, vmin, vmax):
+def four_trajectories_norm(r, tau, angles, cmap, vmin, vmax):
     L = len(tau)
     max_range = 140
     mid_x = (250 + -50) / 2.0
@@ -87,23 +87,24 @@ def fourplots_norm(r, tau, angles, cmap, vmin, vmax):
 cmap1 = sns.diverging_palette(260, 100, l=85, s=100, center="dark", as_cmap=True)
 
 j = 1   # Curve number
-for i in range(60, 61):
+for i in range(1, 61):
     # Import file
     rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
     r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240410 Curves, Meshes/curv{j}_time{i}.csv', delimiter=',', skip_header=1)
 
     # Define frames
-    #d1, d2, d3, K, tau = ribbon_frame(rc, r)
+    d1, d2, d3, K, tau = ribbon_frame(rc, r)
     d10, d20, d30, K0, tau0 = frenet_serret_frame2(rc)
     #d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
 
+    #np.savetxt(f'/Users/ik/Pycharm/Mitchell/240427 Twist Rate, Ribbon Frame {j}/twist_rate_ribbon{j}_time{i}.csv', tau, delimiter=',', fmt='%f')
+
     # Plot
-    #fig = fourplots_norm(rc, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmap.berlin, -0.6, 0.6)
-    fig = plot(rc, tau0, [30, -30], cmaps.berlin)
+    #fig = four_trajectories_norm(rc, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmaps.berlin, -0.6, 0.6)
+    fig = trajectory(rc, tau0, [30, -30], cmaps.berlin)
     fig.suptitle(f'Ribbon Frame {j}, Time {i:02}', fontsize=20, fontweight='bold')
 
-    # Save of show
+    # Save or show
     #plt.savefig(f'centerline_ribbon{j}_{i:02}.png')
-    plt.savefig('roma.png')
-    #plt.show()
+    plt.show()
     plt.close(fig)
