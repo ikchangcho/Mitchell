@@ -6,11 +6,11 @@ import colormaps as cmaps
 
 # List to store each array
 data_arrays = []
-j = 4
+j = 1
 
 # Loop to read each CSV file
 for i in range(1, 61):  # Adjust range for the number of files
-    file_path = f'/Users/ik/Pycharm/Mitchell/240427 Twist Rate, Ribbon Frame {j}/twist_rate_ribbon{j}_time{i}.csv'
+    file_path = f'/Users/ik/Pycharm/Mitchell/240427 Torsion/torsion_time{i}.csv'
     df = pd.read_csv(file_path, header=None)  # Use header=None if no header row exists
     data_arrays.append(df.values.flatten())  # Convert DataFrame to 1D array
 
@@ -29,6 +29,6 @@ plt.yticks(y_ticks, [str(i+1) for i in y_ticks])  # Set y-axis tick positions an
 
 plt.xlabel('')
 plt.ylabel('Time')
-plt.title(f'Twist Rate in the Ribbon Frame {j}')
-plt.savefig(f'/Users/ik/Pycharm/Mitchell/twist_rate_ribbon{j}.png')
+plt.title(f'Torsion')
+plt.savefig(f'torion.png')
 plt.show()

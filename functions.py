@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.signal import savgol_filter
 import matplotlib.pyplot as plt
-from matplotlib.colors import Normalize
 
 # To-Do
 # frenet_serret_frame(), frenet_serret_frame_savitzky_golay(): Curvature
@@ -122,3 +121,32 @@ def ribbon_frame(center, edge):
     return d1, d2, d3, K, tau
 # Position arrays (r1, r2) => Ribbon frames (d1, d2, d3), Curvature (K), Torsion (tau)
 
+for j in range(1, 5):
+    for i in range(1, 61):
+        rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
+        r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_curv{j}.csv', delimiter=',', skip_header=1)
+
+        d1, d2, d3, K, tau = ribbon_frame(rc, r)
+
+        np.savetxt(f'/Users/ik/Pycharm/Mitchell/240427 Twist Rate, Ribbon Frame {j}/twist_rate_ribbon{j}_time{i}.csv', tau, delimiter=",")
+
+
+tau_range = np.zeros((5, 2))
+# Find the range of the torsion
+min_max_torsion = np.zeros((60, 2))
+for i in range(1, 61):
+    torsion = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240427 Torsion/torsion_time{i}.csv')
+    min_max_torsion[i - 1] = [np.min(torsion), np.max(torsion)]
+
+tau_range[0, 0], tau_range[0, 1] = np.min(min_max_torsion[:, 0]), np.max(min_max_torsion[:, 1])
+
+# # Find the range of the twist rate
+# for j in range(1, 5):
+#     min_max_twist_rate = np.zeros((60, 2))
+#     for i in range(1, 61):
+#         twist_rate = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240427 Twist Rate, Ribbon Frame {j}/twist_rate_ribbon{j}_time{i}.csv')
+#         min_max_twist_rate[i - 1] = [np.min(twist_rate), np.max(twist_rate)]
+#
+#     tau_range[j, 0], tau_range[j, 1] = np.min(min_max_twist_rate[:, 0]), np.max(min_max_twist_rate[:, 1])
+#
+# np.savetxt(f'/Users/ik/Pycharm/Mitchell/twist_rate_range.csv', tau_range, delimiter=',', fmt='%.2f')
