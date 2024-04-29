@@ -78,5 +78,5 @@ for i in range(1, 61):
 
     fig.suptitle(f'Ribbon Frame {j}, Time {i:02}', fontsize=20, fontweight='bold')
     plt.savefig(f'/Users/ik/Pycharm/Mitchell/240428 Ribbon {j}, Threshold {threshold}/ribbon{j}_time{i:02}_thrsh{threshold}.png')
-    #plt.show()
+    plt.show()
     plt.close(fig)

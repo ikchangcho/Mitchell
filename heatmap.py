@@ -5,8 +5,8 @@ import seaborn as sns
 import colormaps as cmaps
 
 
-j = 1
-threshold = 0.7
+j = 4
+threshold = 0.3
 data_arrays = []
 
 # Loop to read each CSV file
