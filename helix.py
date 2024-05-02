@@ -1,4 +1,4 @@
-from functions import *
+from frames import *
 
 # Curvature 1, Torsion 1 helix
 N = 100000

@@ -1,3 +1,4 @@
+from frames import *
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
@@ -5,13 +6,13 @@ import colormaps as cmaps
 import seaborn as sns
 
 
-def trajectory(r, tau, angle, cmap):
+def trajectory(r, tau, angle, cmap, threshold):
     L = len(tau)
 
     fig = plt.figure(figsize=(20, 15))
 
     ax = fig.add_subplot(1, 1, 1, projection='3d')
-    sc = ax.scatter(r[1:L + 1, 0], r[1:L + 1, 1], r[1:L + 1, 2], c=tau, cmap=cmap)
+    sc = ax.scatter(r[1:L + 1, 0], r[1:L + 1, 1], r[1:L + 1, 2], c=tau, cmap=cmap, norm=Normalize(vmin=-threshold, vmax=threshold))
     ax.view_init(elev=angle[0], azim=angle[1])
 
     # Setting the same scale for all axes
@@ -41,7 +42,7 @@ def trajectory(r, tau, angle, cmap):
 # => Figure
 # Create a 3D trajectory
 
-def four_trajectories_norm(r, tau, angles, cmap, vmin, vmax):
+def four_trajectories(r, tau, angles, cmap, threshold):
     L = len(tau)
     max_range = 140
     mid_x = (250 + -50) / 2.0
@@ -59,7 +60,7 @@ def four_trajectories_norm(r, tau, angles, cmap, vmin, vmax):
 
     for j, angle in enumerate(angles, start=1):
         ax = fig.add_subplot(2, 2, j, projection='3d')
-        sc = ax.scatter(r[1:L + 1, 0], r[1:L + 1, 1], r[1:L + 1, 2], c=tau, cmap=cmap, norm=Normalize(vmin=vmin, vmax=vmax))
+        sc = ax.scatter(r[1:L + 1, 0], r[1:L + 1, 1], r[1:L + 1, 2], c=tau, cmap=cmap, norm=Normalize(vmin=-threshold, vmax=threshold))
         ax.view_init(elev=angle[0], azim=angle[1])
 
         # Setting the same scale for all axes
@@ -83,18 +84,29 @@ def four_trajectories_norm(r, tau, angles, cmap, vmin, vmax):
 # Customized color maps
 cmap1 = sns.diverging_palette(260, 100, l=85, s=100, center="dark", as_cmap=True)
 
+
+# Make plots
+cmap = cmaps.berlin
+threshold = 0.1
+init_time = 1
+final_time = 61
+
 j = 4   # Curve number
-for i in range(1, 61):
+for w in range(30, 31):
+    print(f'PROGRESS: w={w}')
+    for i in range(init_time, final_time):
 
-    rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
-    torsion = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240427 Torsion/torsion_time{i}.csv')
-    twist_rate = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240427 Twist Rate, Ribbon Frame {j}/twist_rate_ribbon{j}_time{i}.csv')
+        rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
+        #tau = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240501 Tosrion, Savitky-Golay, w=20, p=2/torsion_time{i}.csv')
+        d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(rc, w, 2)
 
-    fig = four_trajectories_norm(rc, twist_rate, [(30, -30), (90, -90), (0, -90), (0, 180)], cmaps.berlin, -1.0, 1.0)
-    #fig = trajectory(rc, twist_rate, [30, -30], cmaps.berlin)
-    fig.suptitle(f'Ribbon Frame {j}, Time {i:02}', fontsize=20, fontweight='bold')
+        over_saturated = (np.abs(tau) > threshold).sum()
+        #fig = four_trajectories(rc, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmap, threshold)
+        fig = trajectory(rc, tau, [30, -30], cmap, threshold)
+        fig.text(0.5, 0.94, f'Torsion, Savitzky-Golay, w={w}, p=2, Time {i:02}', fontsize=20, ha='center', weight='bold')
+        fig.text(0.5, 0.90, f'Oversaturated: {over_saturated}/{len(tau)}', fontsize=15, ha='center', style='italic')
 
-    # Save or show
-    plt.savefig(f'/Users/ik/Pycharm/Mitchell/240427 Center Lines, Ribbon Frame {j}/centerline_ribbon{j}_time{i:02}.png')
-    #plt.show()
-    plt.close(fig)
+        # Save or show
+        plt.savefig(f'/Users/ik/Pycharm/Mitchell/240502 Centerlines, Frenet-Serret Frame, Savitsky-Golay, w={w}, p=2/centerline_time{i:02}.png')
+        #plt.show()
+        plt.close(fig)
