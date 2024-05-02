@@ -6,11 +6,11 @@ r = np.zeros((N, 3))
 for i in range(N):
     r[i] = [0.5 * np.cos(i * 10 / N), 0.5 * np.sin(i * 10 / N), 0.5 * i * 10 / N]
 
-d1, d2, d3, K, tau = frenet_serret_frame2(r)
-#d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 5, 2)
+#d1, d2, d3, K, tau = frenet_serret_frame2(r)
+d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(r, 20, 2)
 
-print(d1[:5], '\n', d2[:5], '\n', d3[:5])
-print('Torsion: ', tau[0:10])
+print(' d1\n', d1[:5], '\n', 'd2\n', d2[:5], '\n', 'd3\n', d3[:5])
+print('Torsion: ', tau[100:112])
 #print('Curvature: ', K[:10])
 print('Orthogonality')
 for j in range(5, 9):

@@ -42,7 +42,7 @@ def frenet_serret_frame_savitzky_golay(r, w, p):
     tau = np.zeros(L-1)
 
     # Smooth positions by using the Savitzky-Golay filter
-    r_smooth_der1 = savgol_filter(r, w, polyorder=p, axis=0, mode='nearest', deriv=1)
+    r_smooth_der1 = savgol_filter(r, w, polyorder=p, axis=0, mode='mirror', deriv=1)
     norms_der1 = np.linalg.norm(r_smooth_der1, axis=1, keepdims=True)
 
     # Define the Frenet-Serret frame
@@ -121,24 +121,28 @@ def ribbon_frame(center, edge):
     return d1, d2, d3, K, tau
 # Position arrays (r1, r2) => Ribbon frames (d1, d2, d3), Curvature (K), Torsion (tau)
 
-for j in range(1, 5):
+
+
+j = 1
+for w in [5, 10, 20, 30]:
     for i in range(1, 61):
         rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
-        r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_curv{j}.csv', delimiter=',', skip_header=1)
+        #r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_curv{j}.csv', delimiter=',', skip_header=1)
 
-        d1, d2, d3, K, tau = ribbon_frame(rc, r)
+        d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(rc,w,2)
 
-        np.savetxt(f'/Users/ik/Pycharm/Mitchell/240427 Twist Rate, Ribbon Frame {j}/twist_rate_ribbon{j}_time{i}.csv', tau, delimiter=",")
+        np.savetxt(f'/Users/ik/Pycharm/Mitchell/240501 Tosrion, Savitky-Golay, w={w}, p=2/torsion_time{i}.csv', tau, delimiter=",")
 
 
-tau_range = np.zeros((5, 2))
-# Find the range of the torsion
-min_max_torsion = np.zeros((60, 2))
-for i in range(1, 61):
-    torsion = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240427 Torsion/torsion_time{i}.csv')
-    min_max_torsion[i - 1] = [np.min(torsion), np.max(torsion)]
+#tau_range = np.zeros((5, 2))
 
-tau_range[0, 0], tau_range[0, 1] = np.min(min_max_torsion[:, 0]), np.max(min_max_torsion[:, 1])
+# # Find the range of the torsion
+# min_max_torsion = np.zeros((60, 2))
+# for i in range(1, 61):
+#     torsion = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240427 Torsion/torsion_time{i}.csv')
+#     min_max_torsion[i - 1] = [np.min(torsion), np.max(torsion)]
+#
+# tau_range[0, 0], tau_range[0, 1] = np.min(min_max_torsion[:, 0]), np.max(min_max_torsion[:, 1])
 
 # # Find the range of the twist rate
 # for j in range(1, 5):
