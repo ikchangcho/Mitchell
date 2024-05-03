@@ -130,15 +130,15 @@ def ribbon_frame(center, edge):
 
 
 
-w = 5
-for j in range(1, 5):
-    for i in range(1, 61):
-        rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
-        r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_curv{j}.csv', delimiter=',', skip_header=1)
-
-        d1, d2, d3, K, tau, Tw = ribbon_frame(rc, r)
-
-        np.savetxt(f'/Users/ik/Pycharm/Mitchell/250502 Twist, Ribbon {j}/twist_ribbon{j}_time{i:02}.csv', Tw, delimiter=",")
+# w = 5
+# for j in range(1, 5):
+#     for i in range(1, 61):
+#         rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
+#         r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_curv{j}.csv', delimiter=',', skip_header=1)
+#
+#         d1, d2, d3, K, tau, Tw = ribbon_frame(rc, r)
+#
+#         np.savetxt(f'/Users/ik/Pycharm/Mitchell/250502 Twist, Ribbon {j}/twist_ribbon{j}_time{i:02}.csv', Tw, delimiter=",")
 
 
 #tau_range = np.zeros((5, 2))

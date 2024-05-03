@@ -85,28 +85,28 @@ def four_trajectories(r, tau, angles, cmap, threshold):
 cmap1 = sns.diverging_palette(260, 100, l=85, s=100, center="dark", as_cmap=True)
 
 
-# Make plots
-cmap = cmaps.berlin
-threshold = 0.1
-init_time = 1
-final_time = 61
-
-j = 4   # Curve number
-for w in range(30, 31):
-    print(f'PROGRESS: w={w}')
-    for i in range(init_time, final_time):
-
-        rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
-        #tau = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240501 Tosrion, Savitky-Golay, w=20, p=2/torsion_time{i}.csv')
-        d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(rc, w, 2)
-
-        over_saturated = (np.abs(tau) > threshold).sum()
-        #fig = four_trajectories(rc, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmap, threshold)
-        fig = trajectory(rc, tau, [30, -30], cmap, threshold)
-        fig.text(0.5, 0.94, f'Torsion, Savitzky-Golay, w={w}, p=2, Time {i:02}', fontsize=20, ha='center', weight='bold')
-        fig.text(0.5, 0.90, f'Oversaturated: {over_saturated}/{len(tau)}', fontsize=15, ha='center', style='italic')
-
-        # Save or show
-        plt.savefig(f'/Users/ik/Pycharm/Mitchell/240502 Centerlines, Frenet-Serret Frame, Savitsky-Golay, w={w}, p=2/centerline_time{i:02}.png')
-        #plt.show()
-        plt.close(fig)
+# # Make plots
+# cmap = cmaps.berlin
+# threshold = 0.1
+# init_time = 1
+# final_time = 61
+#
+# j = 4   # Curve number
+# for w in range(30, 31):
+#     print(f'PROGRESS: w={w}')
+#     for i in range(init_time, final_time):
+#
+#         rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
+#         #tau = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240501 Tosrion, Savitky-Golay, w=20, p=2/torsion_time{i}.csv')
+#         d1, d2, d3, K, tau = frenet_serret_frame_savitzky_golay(rc, w, 2)
+#
+#         over_saturated = (np.abs(tau) > threshold).sum()
+#         #fig = four_trajectories(rc, tau, [(30, -30), (90, -90), (0, -90), (0, 180)], cmap, threshold)
+#         fig = trajectory(rc, tau, [30, -30], cmap, threshold)
+#         fig.text(0.5, 0.94, f'Torsion, Savitzky-Golay, w={w}, p=2, Time {i:02}', fontsize=20, ha='center', weight='bold')
+#         fig.text(0.5, 0.90, f'Oversaturated: {over_saturated}/{len(tau)}', fontsize=15, ha='center', style='italic')
+#
+#         # Save or show
+#         plt.savefig(f'/Users/ik/Pycharm/Mitchell/240502 Centerlines, Frenet-Serret Frame, Savitsky-Golay, w={w}, p=2/centerline_time{i:02}.png')
+#         #plt.show()
+#         plt.close(fig)

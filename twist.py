@@ -3,12 +3,21 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-for i in range(1, 61):
-    data = np.zeros(99)
-    for j in range(1, 5):
-        data += np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/250502 Twist, Ribbon {j}/twist_ribbon{j}_time{i:02}.csv', delimiter=',')
-    data = data / 4
-    np.savetxt(f'average_twist_time{i}', data, delimiter=",")
+data = np.zeros((4, 2))
+for i in range(4):
+    data[i, 0] = np.min(np.genfromtxt(f"twist_ribbon{i+1}.csv", delimiter=",", skip_header=1))
+    data[i, 1] = np.max(np.genfromtxt(f"twist_ribbon{i+1}.csv", delimiter=",", skip_header=1))
+print(data)
+np.savetxt("twist_range.csv", data, delimiter=",", header="Row: Curve numbers, Column: Min and Max")
+
+
+
+# for i in range(1, 61):
+#     data = np.zeros(99)
+#     for j in range(1, 5):
+#         data += np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/250502 Twist, Ribbon {j}/twist_ribbon{j}_time{i:02}.csv', delimiter=',')
+#     data = data / 4
+#     np.savetxt(f'average_twist_time{i}', data, delimiter=",")
 
 
 
