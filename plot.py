@@ -1,7 +1,7 @@
 from frames import *
 from visualization import *
 
-data = np.genfromtxt("twist_average.csv", delimiter=",", skip_header=1)
+data = np.genfromtxt("twist_rate_average.csv", delimiter=",", skip_header=1)
 data1 = np.genfromtxt("twist_ribbon1.csv", delimiter=",", skip_header=1)
 data2 = np.genfromtxt("twist_ribbon2.csv", delimiter=",", skip_header=1)
 data3 = np.genfromtxt("twist_ribbon3.csv", delimiter=",", skip_header=1)
@@ -32,7 +32,8 @@ for i in range(60):
     ax.grid()
     ax.set_xlabel("Sampled Points")
     ax.set_ylabel("Twist (rad)")
-    ax.set_ylim(-3, 3.5)
-    ax.set_title(f"Average Twist, Time {i+1:02}")
-    plt.savefig(f"/Users/ik/Pycharm/Mitchell/240502 Twist, Average/twist_average_time{i+1:02}.png")
+    ax.set_ylim(-0.1, 0.1)
+    ax.set_title(f"Average Twist Rate, Time {i+1:02}")
+    plt.savefig(f"twist_rate_average_time{i+1:02}.png")
+    #plt.show()
     plt.close(fig)

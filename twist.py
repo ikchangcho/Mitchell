@@ -3,12 +3,12 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-data = np.zeros((4, 2))
-for i in range(4):
-    data[i, 0] = np.min(np.genfromtxt(f"twist_ribbon{i+1}.csv", delimiter=",", skip_header=1))
-    data[i, 1] = np.max(np.genfromtxt(f"twist_ribbon{i+1}.csv", delimiter=",", skip_header=1))
-print(data)
-np.savetxt("twist_range.csv", data, delimiter=",", header="Row: Curve numbers, Column: Min and Max")
+data1 = np.genfromtxt("twist_rate_ribbon1.csv", delimiter=",", skip_header=1)
+data2 = np.genfromtxt("twist_rate_ribbon2.csv", delimiter=",", skip_header=1)
+data3 = np.genfromtxt("twist_rate_ribbon3.csv", delimiter=",", skip_header=1)
+data4 = np.genfromtxt("twist_rate_ribbon4.csv", delimiter=",", skip_header=1)
+data = (data1 + data2 + data3 + data4) / 4
+np.savetxt("twist_rate_average.csv", data, delimiter=",", header="Row: Time, Column: Sampled points")
 
 
 
