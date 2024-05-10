@@ -26,22 +26,24 @@ from visualization import *
 #     plt.savefig(f"/Users/ik/Pycharm/Mitchell/240502 Twist, Four Ribbons/twist_four_ribbons_time{i+1:02}.png")
 #     plt.close(fig)
 
-distance = np.genfromtxt("distance_between_points.csv", delimiter=",", skip_header=1)
-accum_distance = np.cumsum(distance, axis=1)
-accum_distance = np.hstack((np.zeros((accum_distance.shape[0], 1)), accum_distance))
+# distance = np.genfromtxt("distance_between_points.csv", delimiter=",", skip_header=1)
+# accum_distance = np.cumsum(distance, axis=1)
+# accum_distance = np.hstack((np.zeros((accum_distance.shape[0], 1)), accum_distance))
+accum_distance = np.genfromtxt("accumulative_distance.csv", delimiter=",", skip_header=1)
 
-for w in range(5, 31, 5):
-    data = np.genfromtxt(f"240508 Twist Values, Frenet-Serret Frame, Savistzky-Golay/twist_fr_sg_w{w}_p2.csv",
-                         delimiter=",", skip_header=1)
-    for i in range(1, 61):
+plt.close('all')
+for w in range(1):
+    data = np.genfromtxt(f"torsion.csv", delimiter=",", skip_header=1)
+    data2 = np.genfromtxt(f"Torsion2.csv", delimiter=",", skip_header=1)
+    for i in range(60, 61):
         fig, ax = plt.subplots(figsize=(7, 5))
-        ax.plot(accum_distance[i-1], data[i-1])
+        ax.plot(accum_distance[i-1,:len(data[i-1])], data[i-1])
+        ax.plot(accum_distance[i-1,:len(data2[i-1])], data2[i-1])
 
         ax.grid()
         ax.set_xlabel(r"Curve Length ($\mu m$)")
-        ax.set_ylabel("Twist (rad)")
-        ax.set_ylim(-7, 7)
-        ax.set_title(f"Frenet-Serret Frame, Savitzky-Golay, w={w}, p=2, Time {i:02}")
-        plt.savefig(f"/Users/ik/Pycharm/Mitchell/240508 Twist Plots, Frenet-Serret Frame, Savistzky-Golay, w={w}/twist_fr_sg_w{w}_p2_time{i:02}.png")
-        #plt.show()
-        plt.close(fig)
+        ax.set_ylabel(r"Torsion (rad/$\mu m$)")
+        ax.set_ylim()
+        ax.set_title(f"Torsion, Time {i:02}")
+        #plt.savefig(f"/Users/ik/Pycharm/Mitchell/240508 Twist Plots, Frenet-Serret Frame, Savistzky-Golay, w={w}/twist_fr_sg_w{w}_p2_time{i:02}.png")
+        plt.show()
