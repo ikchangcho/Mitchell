@@ -1,12 +1,13 @@
+import numpy as np
+
 from frames import *
 from visualization import *
 
-data = np.genfromtxt("twist_rate_average.csv", delimiter=",", skip_header=1)
-data1 = np.genfromtxt("twist_ribbon1.csv", delimiter=",", skip_header=1)
-data2 = np.genfromtxt("twist_ribbon2.csv", delimiter=",", skip_header=1)
-data3 = np.genfromtxt("twist_ribbon3.csv", delimiter=",", skip_header=1)
-data4 = np.genfromtxt("twist_ribbon4.csv", delimiter=",", skip_header=1)
-labels = ["Ribbon1", "Ribbon2", "Ribbon3", "Ribbon4"]
+# data1 = np.genfromtxt("twist_ribbon1.csv", delimiter=",", skip_header=1)
+# data2 = np.genfromtxt("twist_ribbon2.csv", delimiter=",", skip_header=1)
+# data3 = np.genfromtxt("twist_ribbon3.csv", delimiter=",", skip_header=1)
+# data4 = np.genfromtxt("twist_ribbon4.csv", delimiter=",", skip_header=1)
+# labels = ["Ribbon1", "Ribbon2", "Ribbon3", "Ribbon4"]
 
 # for i in range(60):
 #     fig, ax = plt.subplots(figsize=(7, 5))
@@ -25,15 +26,22 @@ labels = ["Ribbon1", "Ribbon2", "Ribbon3", "Ribbon4"]
 #     plt.savefig(f"/Users/ik/Pycharm/Mitchell/240502 Twist, Four Ribbons/twist_four_ribbons_time{i+1:02}.png")
 #     plt.close(fig)
 
-for i in range(60):
-    fig, ax = plt.subplots(figsize=(7, 5))
-    ax.plot(data[i])
+distance = np.genfromtxt("distance_between_points.csv", delimiter=",", skip_header=1)
+accum_distance = np.cumsum(distance, axis=1)
+accum_distance = np.hstack((np.zeros((accum_distance.shape[0], 1)), accum_distance))
 
-    ax.grid()
-    ax.set_xlabel("Sampled Points")
-    ax.set_ylabel("Twist (rad)")
-    ax.set_ylim(-0.1, 0.1)
-    ax.set_title(f"Average Twist Rate, Time {i+1:02}")
-    plt.savefig(f"twist_rate_average_time{i+1:02}.png")
-    #plt.show()
-    plt.close(fig)
+for w in range(5, 31, 5):
+    data = np.genfromtxt(f"240508 Twist Values, Frenet-Serret Frame, Savistzky-Golay/twist_fr_sg_w{w}_p2.csv",
+                         delimiter=",", skip_header=1)
+    for i in range(1, 61):
+        fig, ax = plt.subplots(figsize=(7, 5))
+        ax.plot(accum_distance[i-1], data[i-1])
+
+        ax.grid()
+        ax.set_xlabel(r"Curve Length ($\mu m$)")
+        ax.set_ylabel("Twist (rad)")
+        ax.set_ylim(-7, 7)
+        ax.set_title(f"Frenet-Serret Frame, Savitzky-Golay, w={w}, p=2, Time {i:02}")
+        plt.savefig(f"/Users/ik/Pycharm/Mitchell/240508 Twist Plots, Frenet-Serret Frame, Savistzky-Golay, w={w}/twist_fr_sg_w{w}_p2_time{i:02}.png")
+        #plt.show()
+        plt.close(fig)
