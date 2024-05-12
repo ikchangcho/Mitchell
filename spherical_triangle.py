@@ -2,13 +2,13 @@ import numpy as np
 
 def cartesian_to_spherical(x):
     r = np.linalg.norm(x)
-    theta = np.atan2(np.sqrt(x[0]**2 + x[1]**2), x[2])
-    phi = np.atan2(x[1], x[0])
+    theta = np.arctan2(np.sqrt(x[0]**2 + x[1]**2), x[2])
+    phi = np.arctan2(x[1], x[0])
 
     return r, theta, phi
 
 def phi_prime(theta1, phi1, theta2, phi2):
-    return np.atan2(np.sin(theta1 - theta2) * np.cos(phi1), np.sin(phi1) * np.cos(phi2) - np.cos(phi1) * np.sin(phi2) * np.cos(theta1 - theta2))
+    return np.arctan2(np.sin(theta1 - theta2) * np.cos(phi1), np.sin(phi1) * np.cos(phi2) - np.cos(phi1) * np.sin(phi2) * np.cos(theta1 - theta2))
 # Transform two points on the unit sphere so that theta2 becomes pi/2
 
 def spherical_angle(A, P, B):

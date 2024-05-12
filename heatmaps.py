@@ -10,16 +10,28 @@ constrictions[constrictions == 0] = np.nan
 constrictions = constrictions * 99
 threshold = 0.3
 
-plt.close('all')
-fig = plt.figure(figsize=(18, 10))
-
+twist_rates = {}
 for j in range(1, 5):
-    ax = fig.add_subplot(2, 2, j)
-    twist_rates = np.genfromtxt(f"twist_rate_ribbon{j}.csv", delimiter=",", skip_header=1)
+    twist_rates[j] = np.genfromtxt(f"twist_rate_ribbon{j}.csv", delimiter=",", skip_header=1)
+
+left_right = {}
+left_right[1] = (twist_rates[3] + twist_rates[4]) / 2
+left_right[2] = (twist_rates[1] + twist_rates[2]) / 2
+
+dorsal_ventral = {}
+dorsal_ventral[1] = (twist_rates[1] + twist_rates[4]) / 2
+dorsal_ventral[2] = (twist_rates[2] + twist_rates[3]) / 2
+
+plt.close('all')
+fig = plt.figure(figsize=(30, 20))
+labels = ['Right Dorsal', 'Right Ventral', 'Left Ventral', 'Left Dorsal']
+
+for j, jj in zip([1, 2, 3, 4], [2, 4, 3, 1]):
+    ax = fig.add_subplot(2, 2, jj)
     data_arrays = None
 
     for i in range(60):
-        tau = twist_rates[i]
+        tau = twist_rates[j][i]
 
         if data_arrays is None:
             data_arrays = tau
@@ -41,11 +53,11 @@ for j in range(1, 5):
 
     # Customizing x and y ticks:
     x_ticks = np.arange(0, 99, 10)  # Modify step size as needed
-    plt.xticks(x_ticks, [str(i+1) for i in x_ticks])  # Set x-axis tick positions and labels
+    plt.xticks(x_ticks, [str(i) for i in x_ticks])  # Set x-axis tick positions and labels
     y_ticks = np.arange(0, 61, 5)  # Modify step size as needed
     plt.yticks(y_ticks, [2 * i for i in y_ticks])  # Set y-axis tick positions and labels
 
-    plt.title(f'Ribbon {j} (Over Saturated: {over_saturated}/{60 * 99})')
+    plt.title(labels[j-1], fontsize = 15, fontweight = "bold")
     #plt.savefig(f'heatmap_torsion_sg_w{w}_p2.png')
 
 # Create one common colorbar for all heatmaps
@@ -56,5 +68,6 @@ cbar.set_label(r'Twist Rate (rad/$\mu m$)', fontsize=15)
 fig.suptitle(r"Twist Rates on the Ribbon Frames", fontsize=20, fontweight='bold')
 fig.supxlabel("Sampled Points", fontsize=15)
 fig.supylabel("Time (min)", fontsize=15)
-plt.tight_layout(rect=[0.02, 0, 0.9, 1])
+plt.tight_layout(rect=[0.02, 0, 0.9, 0.98])
 plt.savefig('Twist Rates on the Ribbon Frames.png')
+plt.show()
