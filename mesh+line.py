@@ -6,27 +6,35 @@ from mpl_toolkits.mplot3d.art3d import Line3DCollection
 import colormaps as cmaps
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-for i in range(1, 61):
-    r = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv',
-                       delimiter=',', skip_header=1)
-    tau = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240427 Torsion/torsion_time{i}.csv')
+torsions = np.genfromtxt("torsion.csv", delimiter=",", skip_header=1)
+for i in range(1, 2):
+    rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
+    r1 = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_curv1.csv', delimiter=",", skip_header=1)
+    r2 = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 curves, Centerlines (Resampled to 100)/tp{i:06}_curv2.csv', delimiter=",", skip_header=1)
+    r3 = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_curv3.csv', delimiter=",", skip_header=1)
+    r4 = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_curv4.csv', delimiter=",", skip_header=1)
+    tau = torsions[i]
     cmap = cmaps.berlin
     L = len(tau)
 
     # Assuming `r` and `tau` are defined and `cmap` is set
     fig = plt.figure(figsize=(20, 15))
     ax = fig.add_subplot(1, 1, 1, projection='3d')
+    ax.plot(r1[:, 0], r1[:, 1], r1[:, 2], label='Ribbon1')
+    ax.plot(r2[:, 0], r2[:, 1], r2[:, 2], label='Ribbon2')
+    ax.plot(r3[:, 0], r3[:, 1], r3[:, 2], label='Ribbon3')
+    ax.plot(r4[:, 0], r4[:, 1], r4[:, 2], label='Ribbon4')
 
-    # Prepare the points to plot
-    points = r[1:L+1, :].reshape(-1, 1, 3)
-    segments = np.concatenate([points[:-1], points[1:]], axis=1)
+    # # Prepare the points to plot
+    # points = rc[1:L + 1, :].reshape(-1, 1, 3)
+    # segments = np.concatenate([points[:-1], points[1:]], axis=1)
+    #
+    # # Create a Line3DCollection
+    # lc = Line3DCollection(segments, cmap=cmap, norm=plt.Normalize(vmin=-1.3, vmax=1.3))
+    # lc.set_array(tau)  # Set the colors according to tau
 
-    # Create a Line3DCollection
-    lc = Line3DCollection(segments, cmap=cmap, norm=plt.Normalize(vmin=-1.3, vmax=1.3))
-    lc.set_array(tau)  # Set the colors according to tau
-
-    # Add collection to the axes
-    ax.add_collection3d(lc)
+    # # Add collection to the axes
+    # ax.add_collection3d(lc)
 
     # Setting the same scale for all axes
     max_range = 140
@@ -38,9 +46,9 @@ for i in range(1, 61):
     ax.set_ylim(mid_y - max_range, mid_y + max_range)
     ax.set_zlim(mid_z - max_range, mid_z + max_range)
 
-    # Adding a color bar
-    cb = fig.colorbar(lc, ax=ax, pad=0.1)
-    cb.set_label('Twist Rate')
+    # # Adding a color bar
+    # cb = fig.colorbar(lc, ax=ax, pad=0.1)
+    # cb.set_label('Twist Rate')
 
     # Load data
     vertices = pd.read_csv(f'/Users/ik/Pycharm/Mitchell/240410 Curves, Meshes/mesh_v_time{i}.csv', header=None).values
@@ -56,5 +64,8 @@ for i in range(1, 61):
     mesh = Poly3DCollection(faces_vertices, alpha=0.01, edgecolor='k')
     ax.add_collection3d(mesh)
 
-    plt.savefig(f'/Users/ik/Pycharm/Mitchell/240427 Center Lines with Mesh, Frenet-Serret Frame/center_line_mesh_fs_time{i}')
+    #plt.savefig(f'/Users/ik/Pycharm/Mitchell/240427 Center Lines with Mesh, Frenet-Serret Frame/center_line_mesh_fs_time{i}')
+    fig.legend()
+    plt.tight_layout()
+    plt.show()
     plt.close(fig)

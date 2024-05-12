@@ -7,18 +7,19 @@ import colormaps as cmaps
 
 constrictions = np.genfromtxt("constrictions.csv", delimiter=",", skip_header=1)
 constrictions[constrictions == 0] = np.nan
-constrictions = constrictions * 97
+constrictions = constrictions * 99
+threshold = 0.3
 
-# for j in range(1, 2):
-#     twist_rate = np.genfromtxt(f"twist_rate_ribbon{j}.csv")
+plt.close('all')
+fig = plt.figure(figsize=(18, 10))
 
-for w in range(20, 21):
-    threshold = 0.3
+for j in range(1, 5):
+    ax = fig.add_subplot(2, 2, j)
+    twist_rates = np.genfromtxt(f"twist_rate_ribbon{j}.csv", delimiter=",", skip_header=1)
     data_arrays = None
 
-    for i in range(1, 61):  # Adjust range for the number of files
-        rc = np.genfromtxt(f"/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv", delimiter=",", skip_header=1)
-        d1, d2, d3, K, tau, Tw = frenet_serret_frame_savitzky_golay(rc, w, 2)
+    for i in range(60):
+        tau = twist_rates[i]
 
         if data_arrays is None:
             data_arrays = tau
@@ -28,8 +29,8 @@ for w in range(20, 21):
     over_saturated = (np.abs(np.array(data_arrays)) > threshold).sum()
 
     # Create a heatmap
-    fig, ax = plt.subplots(figsize=(10, 5)) # You can adjust the size as needed
-    sns.heatmap(data_arrays, ax=ax, annot=False, cmap="RdBu_r", xticklabels=1, yticklabels=1, vmin=-threshold, vmax=threshold)
+    sns.heatmap(data_arrays, ax=ax, annot=False, cmap="RdBu_r", xticklabels=1, yticklabels=1, vmin=-threshold,
+                vmax=threshold, cbar=False)
     ax.plot(constrictions[:, 0], np.arange(1, 61), color="k", linewidth=1)
     ax.plot(constrictions[:, 1], np.arange(1, 61), color="k", linewidth=1)
     ax.plot(constrictions[:, 2], np.arange(1, 61), color="k", linewidth=1)
@@ -39,17 +40,21 @@ for w in range(20, 21):
     # ax.text(100, 60, text, verticalalignment='top', horizontalalignment='right', color='black', fontsize=10)
 
     # Customizing x and y ticks:
-    # Select specific ticks to display on x-axis
     x_ticks = np.arange(0, 99, 10)  # Modify step size as needed
     plt.xticks(x_ticks, [str(i+1) for i in x_ticks])  # Set x-axis tick positions and labels
-
-    # Select specific ticks to display on y-axis
     y_ticks = np.arange(0, 61, 5)  # Modify step size as needed
     plt.yticks(y_ticks, [2 * i for i in y_ticks])  # Set y-axis tick positions and labels
 
-    plt.xlabel('Sampled Points')
-    plt.ylabel('Time (min)')
-    plt.title(f'Torsion, Savitky-Golay, w={w}, p=2 (Over Saturated: {over_saturated}/{60 * 99})')
+    plt.title(f'Ribbon {j} (Over Saturated: {over_saturated}/{60 * 99})')
     #plt.savefig(f'heatmap_torsion_sg_w{w}_p2.png')
-    plt.show()
-    plt.close(fig)
+
+# Create one common colorbar for all heatmaps
+cbar_ax = fig.add_axes([0.91, 0.10, 0.02, 0.8])  # Adjust these values to fit your layout
+cbar = fig.colorbar(ax.get_children()[0], cax=cbar_ax)
+cbar.set_label(r'Twist Rate (rad/$\mu m$)', fontsize=15)
+
+fig.suptitle(r"Twist Rates on the Ribbon Frames", fontsize=20, fontweight='bold')
+fig.supxlabel("Sampled Points", fontsize=15)
+fig.supylabel("Time (min)", fontsize=15)
+plt.tight_layout(rect=[0.02, 0, 0.9, 1])
+plt.savefig('Twist Rates on the Ribbon Frames.png')
