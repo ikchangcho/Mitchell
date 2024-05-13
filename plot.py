@@ -8,6 +8,7 @@ data3 = np.genfromtxt("twist_ribbon3.csv", delimiter=",", skip_header=1)
 data4 = np.genfromtxt("twist_ribbon4.csv", delimiter=",", skip_header=1)
 labels = ['Right Dorsal', 'Right Ventral', 'Left Ventral', 'Left Dorsal']
 
+average = (data1 + data2 + data3 + data4) / 4
 left = (data3 + data4) / 2
 right = (data1 + data2) / 2
 dorsal = (data1 + data4) / 2
@@ -27,8 +28,7 @@ for i in range(60):
     # ax.plot(x[:data2.shape[1]], data2[i], label=labels[1])
     # ax.plot(x[:data3.shape[1]], data3[i], label=labels[2])
     # ax.plot(x[:data4.shape[1]], data4[i], label=labels[3])
-    ax.plot(x[:left.shape[1]], dorsal[i], label='Dorsal')
-    ax.plot(x[:right.shape[1]], ventral[i], label='Ventral')
+    ax.plot(x[:left.shape[1]], average[i])
     ax.axvline(x=c1, color='red', linestyle='--', linewidth=1)
     ax.axvline(x=c2, color='red', linestyle='--', linewidth=1)
     ax.axvline(x=c3, color='red', linestyle='--', linewidth=1)
@@ -37,12 +37,12 @@ for i in range(60):
     ax.set_xlabel("s/L")
     ax.set_ylabel("Twist (rad)")
     ax.set_ylim(-3, 5)
-    ax.set_title(f"Averaged Twist on the Dorsal and Ventral")
-    ax.legend(loc="upper left", fontsize="small")
+    ax.set_title(f"Average Twist")
+    #ax.legend(loc="upper left", fontsize="small")
     ax.text(1.04, 5.1, f'{i*2} min', fontsize=10, ha="right")
 
     #plt.show()
-    plt.savefig(f"/Users/ik/Pycharm/Mitchell/twist_dorsal_ventral_time{i+1:02}.png")
+    plt.savefig(f"/Users/ik/Pycharm/Mitchell/twist_average_time{i+1:02}.png")
     plt.close(fig)
 
 # plt.close('all')
