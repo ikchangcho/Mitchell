@@ -57,7 +57,7 @@ for j, jj in zip([1, 2, 3, 4], [2, 4, 3, 1]):
     y_ticks = np.arange(0, 61, 5)  # Modify step size as needed
     plt.yticks(y_ticks, [2 * i for i in y_ticks])  # Set y-axis tick positions and labels
 
-    plt.title(labels[j-1], fontsize = 15, fontweight = "bold")
+    plt.title(labels[j-1] + f"(Over Saturated: {over_saturated}/{60 * 99})", fontsize=15, fontweight="bold")
     #plt.savefig(f'heatmap_torsion_sg_w{w}_p2.png')
 
 # Create one common colorbar for all heatmaps

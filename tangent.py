@@ -5,11 +5,13 @@ from mpl_toolkits.mplot3d import Axes3D
 tp = 60
 data = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{tp:06}_centerline.csv', delimiter=",", skip_header=1)
 tangents = np.zeros((99, 3))
-
 for i in range(99):
     tangents[i] = data[i+1] - data[i]
     tangents[i] = tangents[i] / np.linalg.norm(tangents[i])
 
+area = np.genfromtxt(f'area_of_triangle_tp{tp:02}.csv')
+
+plt.close('all')
 for i in range(99):
 
     # Create a sphere
@@ -44,10 +46,12 @@ for i in range(99):
     ax.set_yticks([-1, 0, 1])
     ax.set_zticks([-1, 0, 1])
     ax.view_init(elev=0, azim=0)
-    ax.set_title(f"Tangent Vector at the {i+1}th Point")
+    ax.set_title(f"Area of the spherical triangle * 10^4 = {area[i-1] * 1e4:.1f}")
+    ax.text(1, 1, 1,f"Point {i+1}", ha="right")
 
-    plt.suptitle(f"Time {tp:02}")
-    plt.savefig(f'/Users/ik/Pycharm/Mitchell/240510 Tangent Vectors Trajectory, Time {tp:02}/tangent_vectors_time{tp:02}_point_{i+1:02}.png')
+    plt.suptitle(f"Tangent Vectors ({tp*2} min)")
+    plt.tight_layout()
+    plt.savefig(f'/Users/ik/Pycharm/Mitchell/tangent_vectors_tp{tp:02}_point{i+1:02}.png')
     #plt.show()
     plt.close(fig)
 
