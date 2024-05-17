@@ -1,10 +1,30 @@
 import numpy as np
 from scipy.signal import savgol_filter
 
-# To-Do
-# frenet_serret_frame(), frenet_serret_frame_savitzky_golay(): Curvature
-
 def frenet_serret_frame(r):
+    """Build the Frenet-Serret frame.
+
+    Parameters
+    ----------
+    r : L x 3 float
+        Coordinates of each point in the curve
+
+    Returns
+    -------
+    d1 : (L-2) x 3 float
+        Normal vectors
+    d2 : (L-2) x 3 float
+        Binormal vectors
+    d3 : (L-1) x 3 float
+        Tangent vectors
+    K : (L-2) x 1 float
+        Curvature
+    tau : (L-3) x 1 float
+        Twist rate (Torsion)
+    Tw : (L-2) x 1 float
+        Twist
+    """
+
     L = len(r)
     d3 = np.zeros((L-1, 3))     # Tangent vector
     d1 = np.zeros((L-2, 3))     # Normal vector
@@ -34,10 +54,36 @@ def frenet_serret_frame(r):
         Tw[n+1] = Tw[n] - np.inner(d1[n], (d2[n + 1] - d2[n]))
 
     return d1, d2, d3, K, tau, Tw
-# L x 3 Position array => Frenet-Serret frames (d1, d2, d3), Curvature (K), Torsion (tau)
+
 
 
 def frenet_serret_frame_savitzky_golay(r, w, p):
+    """Build the Frenet-Serret frame from the smoothed curve by using the Savitzky-Golay filter.
+
+    Parameters
+    ----------
+    r : L x 3 float
+        Coordinates of each point in the curve
+    w : int
+        Width of the Savitzky-Golay filter
+    p : int
+        Degree of the polynomial of the Savitzky-Golay filter
+
+    Returns
+    -------
+    d1 : L x 3 float
+        Normal vectors
+    d2 : L x 3 float
+        Binormal vectors
+    d3 : L x 3 float
+        Tangent vectors
+    K : L x 1 float
+        Curvature (Not reliable)
+    tau : (L-1) x 1 float
+        Twist rate (Torsion)
+    Tw : L x 1 float
+        Twist
+    """
     L = len(r)
     K = np.zeros(L)
     tau = np.zeros(L-1)
@@ -60,11 +106,31 @@ def frenet_serret_frame_savitzky_golay(r, w, p):
         Tw[n + 1] = Tw[n] - np.inner(d1[n], (d2[n + 1] - d2[n]))
 
     return d1, d2, d3, K, tau, Tw
-# Savitzky-Golay filter
-# Curvature is not reliable!
 
 
 def frenet_serret_frame2(r):
+    """Build the Frenet-Serret frame by defining the binormal vectors as cross product of the tangent vectors.
+
+    Parameters
+    ----------
+    r : L x 3 float
+        Coordinates of each point in the curve
+
+    Returns
+    -------
+    d1 : (L-2) x 3 float
+        Normal vectors
+    d2 : (L-2) x 3 float
+        Binormal vectors
+    d3 : (L-1) x 3 float
+        Tangent vectors
+    K : (L-2) x 1 float
+        Curvature (Not reliable)
+    tau : (L-3) x 1 float
+        Twist rate (Torsion)
+    Tw : (L-2) x 1 float
+        Twist
+    """
     L = len(r)
     d3 = np.zeros((L-1, 3))     # Tangent vector
     d1 = np.zeros((L-2, 3))     # Normal vector
@@ -93,10 +159,33 @@ def frenet_serret_frame2(r):
         Tw[n + 1] = Tw[n] - np.inner(d1[n], (d2[n + 1] - d2[n]))
 
     return d1, d2, d3, K, tau, Tw
-# Position arrays (r) => Frenet-Serret frames (d1, d2, d3), Curvature (K), Torsion (tau)
-# Curvature is not reliable
+
 
 def ribbon_frame(center, edge):
+    """Build the Ribbon frame from two curves, by defining the binormal vectors as the difference between the two curves.
+
+    Parameters
+    ----------
+    center : L x 3 float
+        Coordinates of each point in the center curve
+    edge : L x 3 float
+        Coordinates of each point in the edge curve
+
+    Returns
+    -------
+    d1 : (L-1) x 3 float
+        Normal vectors
+    d2 : (L-1) x 3 float
+        Binormal vectors
+    d3 : (L-1) x 3 float
+        Tangent vectors
+    K : (L-1) x 1 float
+        Curvature (Not reliable)
+    tau : (L-2) x 1 float
+        Twist rate (Torsion)
+    Tw : (L-1) x 1 float
+        Twist
+    """
     L = len(center)
     d3 = np.zeros((L-1, 3))     # Tangent vector
     d1 = np.zeros((L-1, 3))     # Normal vector
@@ -126,26 +215,3 @@ def ribbon_frame(center, edge):
         Tw[n + 1] = Tw[n] - np.inner(d1[n], (d2[n + 1] - d2[n]))
 
     return d1, d2, d3, K, tau, Tw
-# Position arrays (r1, r2) => Ribbon frames (d1, d2, d3), Curvature (K), Torsion (tau)
-
-
-#tau_range = np.zeros((5, 2))
-
-# # Find the range of the torsion
-# min_max_torsion = np.zeros((60, 2))
-# for i in range(1, 61):
-#     torsion = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240427 Torsion/torsion_time{i}.csv')
-#     min_max_torsion[i - 1] = [np.min(torsion), np.max(torsion)]
-#
-# tau_range[0, 0], tau_range[0, 1] = np.min(min_max_torsion[:, 0]), np.max(min_max_torsion[:, 1])
-
-# # Find the range of the twist rate
-# for j in range(1, 5):
-#     min_max_twist_rate = np.zeros((60, 2))
-#     for i in range(1, 61):
-#         twist_rate = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240427 Twist Rate, Ribbon Frame {j}/twist_rate_ribbon{j}_time{i}.csv')
-#         min_max_twist_rate[i - 1] = [np.min(twist_rate), np.max(twist_rate)]
-#
-#     tau_range[j, 0], tau_range[j, 1] = np.min(min_max_twist_rate[:, 0]), np.max(min_max_twist_rate[:, 1])
-#
-# np.savetxt(f'/Users/ik/Pycharm/Mitchell/twist_rate_range.csv', tau_range, delimiter=',', fmt='%.2f')

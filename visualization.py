@@ -7,6 +7,24 @@ import seaborn as sns
 
 
 def trajectory(r, tau, angle, cmap, threshold):
+    """Make a scatter plot of the 3D trajectory of a curve, assigning color to each point according to the twist rate.
+
+    Parameters
+    ----------
+    r : L1 x 3 float
+        Coordinates of each point in the curve
+    tau : L x 3 float
+        Twist rate
+    angle : 1 x 2 float
+        Angles of the view, [Elavation, Azimuthal]
+    cmap : matplotlib color map
+    threshold : 1 x 1 float
+        Range of the color bar, [-threshold, threshold]
+
+    Returns
+    -------
+    fig : matplotlib figure
+    """
     L = len(tau)
 
     fig = plt.figure(figsize=(20, 15))
@@ -39,10 +57,27 @@ def trajectory(r, tau, angle, cmap, threshold):
     cbar.set_label('Twist Rate', fontsize=15, rotation=270, labelpad=15)
 
     return fig
-# => Figure
-# Create a 3D trajectory
+
 
 def four_trajectories(r, tau, angles, cmap, threshold):
+    """Make four scatter subplots of the 3D trajectories of a curve from different angles.
+
+    Parameters
+    ----------
+    r : L1 x 3 float
+        Coordinates of each point in the curve
+    tau : L x 3 float
+        Twist rate
+    angles : List of four tuples
+        Angles of the views e.g. [(30, -30), (90, -90), (0, -90), (0, 180)]
+    cmap : matplotlib color map
+    threshold : 1 x 1 float
+        Range of the color bar, [-threshold, threshold]
+
+    Returns
+    -------
+    fig : matplotlib figure
+    """
     L = len(tau)
     max_range = 140
     mid_x = (250 + -50) / 2.0

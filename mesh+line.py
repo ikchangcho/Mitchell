@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d.art3d import Line3DCollection
 import colormaps as cmaps
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-torsions = np.genfromtxt("torsion.csv", delimiter=",", skip_header=1)
+torsions = np.genfromtxt("CSV/torsion.csv", delimiter=",", skip_header=1)
 for i in range(1, 2):
     rc = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_centerline.csv', delimiter=',', skip_header=1)
     r1 = np.genfromtxt(f'/Users/ik/Pycharm/Mitchell/240411 Curves, Centerlines (Resampled to 100)/tp{i:06}_curv1.csv', delimiter=",", skip_header=1)

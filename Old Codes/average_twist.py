@@ -1,12 +1,12 @@
 import numpy as np
 
 
-data1 = np.genfromtxt("../twist_rate_ribbon1.csv", delimiter=",", skip_header=1)
-data2 = np.genfromtxt("../twist_rate_ribbon2.csv", delimiter=",", skip_header=1)
-data3 = np.genfromtxt("../twist_rate_ribbon3.csv", delimiter=",", skip_header=1)
-data4 = np.genfromtxt("../twist_rate_ribbon4.csv", delimiter=",", skip_header=1)
-data = np.genfromtxt("../torsion.csv", delimiter=",", skip_header=1)
-np.savetxt("../twist_rate_average.csv", data, delimiter=",", header="Row: Time, Column: Sampled points")
+data1 = np.genfromtxt("../CSV/twist_rate_ribbon1.csv", delimiter=",", skip_header=1)
+data2 = np.genfromtxt("../CSV/twist_rate_ribbon2.csv", delimiter=",", skip_header=1)
+data3 = np.genfromtxt("../CSV/twist_rate_ribbon3.csv", delimiter=",", skip_header=1)
+data4 = np.genfromtxt("../CSV/twist_rate_ribbon4.csv", delimiter=",", skip_header=1)
+data = np.genfromtxt("../CSV/torsion.csv", delimiter=",", skip_header=1)
+np.savetxt("../CSV/twist_rate_average.csv", data, delimiter=",", header="Row: Time, Column: Sampled points")
 
 
 

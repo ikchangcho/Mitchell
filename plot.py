@@ -2,10 +2,10 @@ import numpy as np
 from frames import *
 from visualization import *
 
-data1 = np.genfromtxt("twist_ribbon1.csv", delimiter=",", skip_header=1)
-data2 = np.genfromtxt("twist_ribbon2.csv", delimiter=",", skip_header=1)
-data3 = np.genfromtxt("twist_ribbon3.csv", delimiter=",", skip_header=1)
-data4 = np.genfromtxt("twist_ribbon4.csv", delimiter=",", skip_header=1)
+data1 = np.genfromtxt("CSV/twist_ribbon1.csv", delimiter=",", skip_header=1)
+data2 = np.genfromtxt("CSV/twist_ribbon2.csv", delimiter=",", skip_header=1)
+data3 = np.genfromtxt("CSV/twist_ribbon3.csv", delimiter=",", skip_header=1)
+data4 = np.genfromtxt("CSV/twist_ribbon4.csv", delimiter=",", skip_header=1)
 labels = ['Right Dorsal', 'Right Ventral', 'Left Ventral', 'Left Dorsal']
 
 average = (data1 + data2 + data3 + data4) / 4
@@ -14,9 +14,9 @@ right = (data1 + data2) / 2
 dorsal = (data1 + data4) / 2
 ventral = (data2 + data3) / 2
 
-accum_distance = np.genfromtxt("accumulative_distance.csv", delimiter=",", skip_header=1)
+accum_distance = np.genfromtxt("CSV/accumulative_distance.csv", delimiter=",", skip_header=1)
 
-constrictions = np.genfromtxt("constrictions.csv", delimiter=",", skip_header=1)
+constrictions = np.genfromtxt("CSV/constrictions.csv", delimiter=",", skip_header=1)
 constrictions[constrictions == 0] = np.nan
 
 plt.close('all')

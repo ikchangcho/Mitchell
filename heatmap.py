@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import colormaps as cmaps
 
-constrictions = np.genfromtxt("constrictions.csv", delimiter=",", skip_header=1)
+constrictions = np.genfromtxt("CSV/constrictions.csv", delimiter=",", skip_header=1)
 constrictions[constrictions == 0] = np.nan
 constrictions = constrictions * 97
 

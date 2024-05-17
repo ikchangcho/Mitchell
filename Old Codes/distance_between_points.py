@@ -10,4 +10,4 @@ for j in range(60):
 
 accum_distance = np.cumsum(distance, axis=1)
 accum_distance = np.hstack((np.zeros((accum_distance.shape[0], 1)), accum_distance))
-np.savetxt("../accumulative_distance.csv", accum_distance, delimiter=",", header="Row: Time, Column: 1~2, 2~3, ... , 99~100")
+np.savetxt("../CSV/accumulative_distance.csv", accum_distance, delimiter=",", header="Row: Time, Column: 1~2, 2~3, ... , 99~100")
