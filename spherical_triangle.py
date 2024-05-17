@@ -1,6 +1,22 @@
 import numpy as np
 
 def cartesian_to_spherical(x):
+    """Convert Cartesian coordinates into spherical coordinates.
+
+    Parameters
+    ----------
+    x : N x 3 float
+        Cartesian coordinates of N points
+
+    Returns
+    -------
+    r : N x 1 float
+        Radius
+    theta : N x 1 float
+        Angles from the z axis
+    phi : N x 1 float
+        Azimuthal angles
+    """
     r = np.linalg.norm(x)
     theta = np.arctan2(np.sqrt(x[0]**2 + x[1]**2), x[2])
     phi = np.arctan2(x[1], x[0])
@@ -8,8 +24,26 @@ def cartesian_to_spherical(x):
     return r, theta, phi
 
 def phi_prime(theta1, phi1, theta2, phi2):
+    """Transform two points on the unit sphere so that theta2 becomes pi/2, and
+
+    Parameters
+    ----------
+    theta1 : N x 1 float
+        Angles from the z axis of the first point
+    phi1 : N x 1 float
+        Azimuthal angles of the first point
+    theta2 : N x 1 float
+        Angles from the z axis of the second point
+    phi2 : N x 1 float
+        Azimuthal angles of the second point
+
+    Returns
+    -------
+     : float
+        Transformed coordinates
+    """
     return np.arctan2(np.sin(theta1 - theta2) * np.cos(phi1), np.sin(phi1) * np.cos(phi2) - np.cos(phi1) * np.sin(phi2) * np.cos(theta1 - theta2))
-# Transform two points on the unit sphere so that theta2 becomes pi/2
+
 
 def spherical_angle(A, P, B):
     if np.abs(np.linalg.norm(A) - 1) > 1e-6 or np.abs(np.linalg.norm(P) - 1) > 1e-6 or np.abs(np.linalg.norm(B) - 1) > 1e-6:

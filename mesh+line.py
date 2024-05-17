@@ -1,3 +1,5 @@
+'''Generate a 3D line plot of a curve with mesh'''
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt

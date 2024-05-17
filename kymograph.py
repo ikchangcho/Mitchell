@@ -1,3 +1,5 @@
+'''Generate a kymograph of the twist rate of a curve and a frame'''
+
 from frames import *
 import numpy as np
 import pandas as pd

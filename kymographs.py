@@ -1,3 +1,5 @@
+'''Generate kymographs from the twist rates on the ribbon frames'''
+
 from frames import *
 import numpy as np
 import pandas as pd
